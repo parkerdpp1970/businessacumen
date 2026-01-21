@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Business Unit Activities</title>
+    <!-- React and Babel CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .animate-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Helper component to render Lucide Icons in a UMD/CDN environment
+        const Icon = ({ name, size = 16, className = "" }) => {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [name]);
+            return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
+        };
+
+        const App = () => {
+            const [activeModule, setActiveModule] = useState('stats');
+            const [copiedIndex, setCopiedIndex] = useState(null);
+
+            const copyToClipboard = (text, index) => {
+                const textField = document.createElement('textarea');
+                textField.innerText = text;
+                document.body.appendChild(textField);
+                textField.select();
+                document.execCommand('copy');
+                textField.remove();
+                setCopiedIndex(index);
+                setTimeout(() => setCopiedIndex(null), 2000);
+            };
+
+            const modules = [
+                { id: 'stats', title: '01. Industry Statistics', icon: 'bar-chart-3', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
+                { id: 'competitor', title: '02. Competitor Lab', icon: 'search', color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-200' },
+                { id: 'swot', title: '03. SWOT Analysis', icon: 'shield-check', color: 'text-cyan-600', bg: 'bg-cyan-50', border: 'border-cyan-200' },
+                { id: 'funnel', title: '04. Funnel Builder', icon: 'target', color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-200' },
+                { id: 'marketing', title: '05. Digital Strategy', icon: 'megaphone', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200' },
+                { id: 'blog', title: '06. Authority Blogging', icon: 'file-text', color: 'text-pink-600', bg: 'bg-pink-50', border: 'border-pink-200' },
+            ];
+
+            const renderContent = () => {
+                switch (activeModule) {
+                    case 'stats':
+                        return (
+                            <div className="animate-in space-y-8">
+                                <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                                    <div className="relative z-10 space-y-4">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider">
+                                            <Icon name="trending-up" size={14} /> Activity Introduction
+                                        </div>
+                                        <h2 className="text-3xl font-black">Market Validation & Statistics</h2>
+                                        <p className="text-blue-50 max-w-2xl leading-relaxed">
+                                            To build a successful business, you must first understand the landscape. In this activity, you will dive into global fitness growth data to validate your business idea and identify where the real opportunities lie.
+                                        </p>
+                                        <div className="pt-2 flex items-center gap-2">
+                                            <div className="bg-white/10 p-2 rounded-full">
+                                                <Icon name="music" size={16} className="text-blue-200" />
+                                            </div>
+                                            <p className="text-sm font-medium">
+                                                If you're looking for a little motivation to complete this task, then please{' '}
+                                                <a href="https://www.youtube.com/watch?v=DhlPAj38rHc" target="_blank" className="underline decoration-blue-300 underline-offset-4 hover:text-blue-200 transition-colors font-bold">click on the link and listen</a>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <section className="space-y-4">
+                                    <div className="flex items-center gap-2 px-2">
+                                        <div className="bg-blue-100 p-1.5 rounded-lg">
+                                            <Icon name="info" size={20} className="text-blue-600" />
+                                        </div>
+                                        <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Step-by-Step Guidance</h3>
+                                    </div>
+                                    <div className="grid gap-4">
+                                        <GuideCard step="1" title="Open NotebookLM">
+                                            Go to <strong>NotebookLM</strong> and create a new notebook. Title it: <span className="text-blue-600 font-bold">"market validation and statistics"</span>.
+                                        </GuideCard>
+                                        <GuideCard step="2" title="Import Knowledge Sources">
+                                            Use the <strong>Toolkit Prompts</strong> below to find global statistics. Copy the findings and import them into the <strong>Sources</strong> panel on the left side of your notebook.
+                                        </GuideCard>
+                                        <GuideCard step="3" title="Chat & Gain Understanding">
+                                            Once your sources are in, use the chat feature in NotebookLM to ask questions about the data. Look for growth factors and emerging trends in the personal training industry.
+                                        </GuideCard>
+                                        <GuideCard step="4" title="Create Your Infographic">
+                                            Using the insights you've gathered, produce an informative <strong>Information Graphic</strong>. Highlight global growth, market value, and key trends.
+                                        </GuideCard>
+                                    </div>
+                                </section>
+                                <ResearchToolkit onCopy={copyToClipboard} copiedIndex={copiedIndex} colorScheme="blue"
+                                    prompts={[
+                                        { label: "Global Industry Growth", text: "What are the latest global statistics for the fitness industry growth rate (CAGR) and total market value projected through 2030? Please use UK English spelling for the output." },
+                                        { label: "Commercial Club Growth", text: "Research the current growth trends for commercial gym chains and independent operators in the UK and globally for 2025/2026. Provide findings strictly in UK English." },
+                                        { label: "Top Fitness Trends", text: "Identify the top fitness trends in the global fitness market for 2025/2026 according to industry leaders. Ensure the response uses UK English (e.g., specialised, programme)." },
+                                        { label: "Personal Training Trends", text: "Find global data on the increasing demand for 1-on-1 personal training and the shift toward boutique fitness. Use UK English spelling for all data points." },
+                                        { label: "Digital Transformation", text: "What percentage of the global fitness market is now driven by hybrid coaching models? Ensure the response uses UK English terminology." }
+                                    ]}
+                                />
+                            </div>
+                        );
+
+                    case 'competitor':
+                        return (
+                            <div className="animate-in space-y-8">
+                                <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                                    <div className="relative z-10 space-y-4">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider">
+                                            <Icon name="search" size={14} /> Activity Introduction
+                                        </div>
+                                        <h2 className="text-3xl font-black">Competitor Detective Audit</h2>
+                                        <p className="text-indigo-50 max-w-2xl leading-relaxed">
+                                            Understanding your competition is the key to differentiation. In this detective audit, you will investigate local trainers to identify market gaps, analyse their pricing, and discover exactly how to stand out in your specific area.
+                                        </p>
+                                        <div className="pt-2 flex items-center gap-2">
+                                            <div className="bg-white/10 p-2 rounded-full">
+                                                <Icon name="music" size={16} className="text-indigo-200" />
+                                            </div>
+                                            <p className="text-sm font-medium">
+                                                If you're looking for a little motivation to complete this task, then please{' '}
+                                                <a href="https://www.youtube.com/watch?v=_Yhyp-_hX2s" target="_blank" className="underline decoration-indigo-300 underline-offset-4 hover:text-indigo-200 transition-colors font-bold">click on the link and listen</a>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <section className="space-y-4">
+                                    <div className="flex items-center gap-2 px-2">
+                                        <div className="bg-indigo-100 p-1.5 rounded-lg">
+                                            <Icon name="info" size={20} className="text-indigo-600" />
+                                        </div>
+                                        <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Step-by-Step Guidance</h3>
+                                    </div>
+                                    <div className="grid gap-4">
+                                        <GuideCard step="1" title="Setup & Import Sources">
+                                            Go to <strong>NotebookLM</strong> and create a new notebook titled: <span className="text-indigo-600 font-bold">"detective audit"</span>. Use the <strong>Toolkit Prompts</strong> to gather local data and import them into the <strong>Sources</strong> panel.
+                                        </GuideCard>
+                                        <GuideCard step="2" title="Chat & Interrogate">
+                                            Once your sources are imported, use the chat feature to interrogate the data. Analyse the <strong>4 Ps</strong> of your competitors (Product, Price, Place, Promotion) and look for gaps.
+                                        </GuideCard>
+                                        <GuideCard step="3" title="Produce Data Table">
+                                            Produce a data table using the <strong>data function</strong> in NotebookLM. Use the specific extraction prompt in the toolkit below to organise your findings.
+                                        </GuideCard>
+                                        <GuideCard step="4" title="Export & Share">
+                                            Use the <strong>export to sheets</strong> function. Save and download the file, or <strong>provide a link into your personal Padlet</strong> to complete this activity.
+                                        </GuideCard>
+                                    </div>
+                                </section>
+                                <ResearchToolkit onCopy={copyToClipboard} copiedIndex={copiedIndex} colorScheme="indigo"
+                                    prompts={[
+                                        { label: "Local Competitor Analysis", text: "Conduct a local competitor analysis for the personal training services in [Your Area]. Please provide all output strictly using UK English spelling and terminology." },
+                                        { label: "Extraction Prompt", text: "Using only the provided sources, create a comprehensive data table identifying all competitors. The table should include: Competitor Name, Competitor Type, Services Offered, Pricing, Positioning, and Weaknesses. Ensure all text uses UK English." },
+                                        { label: "Price Benchmarking", text: "Find pricing for personal training packages in [Your Area] and summarise session rates using UK English." },
+                                        { label: "Service Gap Analysis", text: "Identify unique selling points (USPs) and client feedback for trainers in [Your Area]. Ensure the analysis uses UK English (e.g., specialised, centres)." }
+                                    ]}
+                                />
+                            </div>
+                        );
+
+                    case 'swot':
+                        return (
+                            <div className="animate-in space-y-8">
+                                <div className="bg-gradient-to-br from-cyan-500 to-teal-600 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                                    <div className="relative z-10 space-y-4">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider">
+                                            <Icon name="shield-check" size={14} /> Activity Introduction
+                                        </div>
+                                        <h2 className="text-3xl font-black">Personal SWOT Analysis</h2>
+                                        <p className="text-cyan-50 max-w-2xl leading-relaxed">
+                                            Success happens where your internal strengths meet external market opportunities. This activity helps you honestly assess your current situation and utilise AI to build a robust, evidence-based strategy for your PT career.
+                                        </p>
+                                        <div className="pt-2 flex items-center gap-2">
+                                            <div className="bg-white/10 p-2 rounded-full">
+                                                <Icon name="music" size={16} className="text-cyan-200" />
+                                            </div>
+                                            <p className="text-sm font-medium">
+                                                If you're looking for a little music positivity to get creative, then please{' '}
+                                                <a href="https://www.youtube.com/watch?v=ZbZSe6N_BXs" target="_blank" className="underline decoration-cyan-300 underline-offset-4 hover:text-cyan-100 transition-colors font-bold">click on the link and listen</a>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <section className="space-y-4">
+                                    <div className="flex items-center gap-2 px-2">
+                                        <div className="bg-cyan-100 p-1.5 rounded-lg">
+                                            <Icon name="info" size={20} className="text-cyan-600" />
+                                        </div>
+                                        <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Step-by-Step Guidance</h3>
+                                    </div>
+                                    <div className="grid gap-4">
+                                        <GuideCard step="1" title="AI Interrogation">
+                                            Copy the first three prompts into your chosen <strong>AI LLM</strong> (Sider, ChatGPT, or Gemini) and read the output carefully. Use UK English for all queries.
+                                        </GuideCard>
+                                        <GuideCard step="2" title="Personal Conclusions">
+                                            Use the <strong>My SWOT Summary</strong> template. Input exactly what <strong>you</strong> think your strengths and weaknesses are based on the AI feedback.
+                                        </GuideCard>
+                                        <GuideCard step="3" title="Strategic Formatting">
+                                            Copy the <strong>Strategic Alignment</strong> and <strong>Matrix Generation</strong> prompts to process your personal inputs into a formal document.
+                                        </GuideCard>
+                                        <GuideCard step="4" title="Visual Representation">
+                                            Produce an <strong>Information Graphic</strong> based on your SWOT matrix. Use AI to generate a layout description or use NotebookLM.
+                                        </GuideCard>
+                                        <GuideCard step="5" title="Final Upload">
+                                            Upload your completed SWOT Analysis and visual infographic to your <strong>personal Padlet</strong> to complete this activity.
+                                        </GuideCard>
+                                    </div>
+                                </section>
+                                <ResearchToolkit onCopy={copyToClipboard} copiedIndex={copiedIndex} colorScheme="cyan"
+                                    prompts={[
+                                        { label: "01. Self-Assessment", text: "Conduct a self-assessment for a newly qualified personal trainer based in [Your Area]. List potential internal strengths and weaknesses. Use strictly UK English spelling for the response." },
+                                        { label: "02. Opportunity Analysis", text: "Based on the competitor gaps identified in my previous audit, what are the top 3 market opportunities for my personal training business? Provide the answer in UK English." },
+                                        { label: "03. Threat Identification", text: "Identify external threats to a new personal training business in the current UK economic climate. Ensure the response uses UK English spelling (e.g., specialised, programme)." },
+                                        { label: "04. My SWOT Summary", text: "I have reviewed the AI suggestions and my own market research. Here are my personal conclusions. Strengths: [INSERT YOURS], Weaknesses: [INSERT YOURS], Opportunities: [INSERT YOURS], Threats: [INSERT YOURS]. Please acknowledge these points strictly using UK English." },
+                                        { label: "05. Strategic Alignment", text: "Using my personal summary provided above, please analyse how my unique background can solve problems for clients in my area. Suggest 3 specific ways I can position my services. Use UK English only." },
+                                        { label: "06. Matrix Generation", text: "Finally, generate a formal SWOT Matrix for my personal training business. Present the Strengths, Weaknesses, Opportunities, and Threats in a clear, structured list format using UK English spelling throughout." },
+                                        { label: "07. Infographic Generation", text: "Using the formal SWOT Matrix we just generated, please provide a detailed layout plan for a professional infographic. Ensure the layout description and all text suggestions use UK English." }
+                                    ]}
+                                />
+                            </div>
+                        );
+
+                    case 'funnel':
+                        return (
+                            <div className="animate-in space-y-8">
+                                <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                                    <div className="relative z-10 space-y-4">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider">
+                                            <Icon name="target" size={14} /> Activity Introduction
+                                        </div>
+                                        <h2 className="text-3xl font-black">Sales Funnel Strategy</h2>
+                                        <p className="text-orange-50 max-w-2xl leading-relaxed">
+                                            A sales funnel is a strategic journey that transforms strangers into loyal clients. By mastering each stage—from initial awareness to final conversion—you will build a predictable system for growing your business.
+                                        </p>
+                                        <div className="pt-2 flex flex-col gap-2">
+                                            <div className="flex items-center gap-2">
+                                                <div className="bg-white/10 p-2 rounded-full">
+                                                    <Icon name="music" size={16} className="text-orange-200" />
+                                                </div>
+                                                <p className="text-sm font-medium">
+                                                    If you're looking for a little motivational spirit to help you complete this activity, then please{' '}
+                                                    <a href="https://youtu.be/7YbNNFGM87o?si=-y3Cj54jcOeID5rp" target="_blank" className="underline decoration-orange-300 underline-offset-4 hover:text-orange-100 transition-colors font-bold">click on the link and listen</a>.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="bg-orange-50 border border-orange-200 rounded-2xl p-6 flex items-center gap-4 shadow-sm">
+                                        <div className="bg-orange-100 p-3 rounded-xl text-orange-600">
+                                            <Icon name="youtube" size={32} />
+                                        </div>
+                                        <div className="flex-grow space-y-1">
+                                            <h4 className="font-bold text-orange-900">Funnel Tutorial</h4>
+                                            <p className="text-xs text-orange-700">Watch this essential guide to support your funnel construction.</p>
+                                            <a href="https://youtu.be/VHpxteIrdk8?si=ZU65JkcFiVWFAVQb" target="_blank" className="inline-flex items-center gap-1 text-xs font-bold underline text-orange-800">Watch Now</a>
+                                        </div>
+                                    </div>
+                                    <div className="bg-orange-50 border border-orange-200 rounded-2xl p-6 flex items-center gap-4 shadow-sm">
+                                        <div className="bg-orange-100 p-3 rounded-xl text-orange-600">
+                                            <Icon name="monitor" size={32} />
+                                        </div>
+                                        <div className="flex-grow space-y-1">
+                                            <h4 className="font-bold text-orange-900">Gamma AI Builder</h4>
+                                            <p className="text-xs text-orange-700">Sign up for a free Gamma account to create your PDF lead magnet.</p>
+                                            <a href="https://gamma.app/" target="_blank" className="inline-flex items-center gap-1 text-xs font-bold underline text-orange-800 underline-offset-2">Go to Gamma.app <Icon name="external-link" size={10} /></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <section className="space-y-4">
+                                    <div className="flex items-center gap-2 px-2">
+                                        <div className="bg-orange-100 p-1.5 rounded-lg">
+                                            <Icon name="info" size={20} className="text-orange-600" />
+                                        </div>
+                                        <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Step-by-Step Guidance</h3>
+                                    </div>
+                                    <div className="grid gap-4">
+                                        <GuideCard step="1" title="Watch & Learn">
+                                            Click on the <strong>Funnel Tutorial</strong> link above and watch the video to understand the importance of sales funnels. Once finished, write up <strong>three key takeaways</strong> that stand out and type them into your <strong>personal Padlet</strong>.
+                                        </GuideCard>
+                                        <GuideCard step="2" title="Audience & Awareness">
+                                            Define your <strong>Ideal Customer Profile (ICP)</strong> and awareness content using <strong>Prompts 01 and 03</strong> in your AI tool (Sider, ChatGPT, or Gemini).
+                                        </GuideCard>
+                                        <GuideCard step="3" title="Client Persona Infographic">
+                                            Create a <strong>Client Persona Infographic</strong> based on Step 2. Use <strong>Prompt 02</strong> to get a layout from your AI tool, or use the <strong>NotebookLM infographic feature</strong>.
+                                        </GuideCard>
+                                        <GuideCard step="4" title="Build Your Lead Magnet Content">
+                                            Pick your best idea from <strong>Prompt 04</strong> and build out the full content using <strong>Prompt 05</strong>. To finish, use <strong>Gamma AI</strong> (Sign up for free at <a href="https://gamma.app/" target="_blank" className="underline font-bold">Gamma.app</a>) to generate a stunning PDF document.
+                                        </GuideCard>
+                                        <GuideCard step="5" title="Design Nurture Sequence">
+                                            Use <strong>Prompt 06</strong> to develop a professional 3-email welcome sequence that builds trust with your leads after they download your asset.
+                                        </GuideCard>
+                                        <GuideCard step="6" title="Conversion & Action">
+                                            Enter <strong>Prompt 07</strong> to design your primary conversion offer and craft a compelling call-to-action.
+                                        </GuideCard>
+                                        <GuideCard step="7" title="Analyse & Optimise">
+                                            Establish performance tracking and gather feedback to refine your tactics using <strong>Prompt 08</strong>.
+                                        </GuideCard>
+                                    </div>
+                                </section>
+                                <ResearchToolkit onCopy={copyToClipboard} copiedIndex={copiedIndex} colorScheme="orange"
+                                    prompts={[
+                                        { label: "01. Audience & Goals", text: "Define a detailed Ideal Customer Profile (ICP) for a PT specialising in [YOUR NICHE]. My target customer base is [DESCRIBE THEIR LIFESTYLE, e.g. parents, shift workers] who struggle with [PROBLEM]. Include lifestyle challenges, goals, and online habits. All output must strictly use UK English spelling." },
+                                        { label: "02. Persona Infographic Layout", text: "Using the ICP we just created, provide a visual layout for a Client Persona Infographic. Describe the sections and suggest icons and a colour palette. Ensure all text and layout labels use UK English." },
+                                        { label: "03. Awareness Strategy", text: "Create a 'Top of Funnel' content plan. Suggest 3 social media 'Hook' ideas and 2 blog titles addressing their lifestyle challenges. Ensure strictly UK English spelling (e.g., specialised, programme)." },
+                                        { label: "04. Lead Magnet Idea Selection", text: "Identify the top 5 lead magnet ideas (e.g. PDF guides, strength templates) that would provide value to my defined ICP. Ensure ideas are presented in UK English." },
+                                        { label: "05. Lead Magnet Content Builder", text: "I have chosen the lead magnet: '[NAME OF IDEA]'. Write the complete, detailed content for this asset using strictly UK English spelling (e.g., colour, maximise, centre). If it's a PDF, provide a title, intro, 3 chapters, and a conclusion." },
+                                        { label: "06. Email Nurture", text: "Draft a professional 3-email welcome sequence for a lead. Email 1: Deliver guide. Email 2: Valuable bonus tip. Email 3: Invite to free consultation. Ensure tone is motivating and all spelling is strictly UK English." },
+                                        { label: "07. Conversion Offer", text: "Design a compelling primary offer and a high-converting call-to-action (CTA) to convert leads into customers. Use UK English terminology throughout." },
+                                        { label: "08. Optimisation Plan", text: "Suggest 3 key performance indicators (KPIs) to track success. Provide a strategy for gathering feedback strictly using UK English." }
+                                    ]}
+                                />
+                            </div>
+                        );
+
+                    case 'marketing':
+                        return (
+                            <div className="animate-in space-y-8">
+                                <div className="bg-gradient-to-br from-green-500 to-emerald-700 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                                    <div className="relative z-10 space-y-4">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider">
+                                            <Icon name="megaphone" size={14} /> Activity Introduction
+                                        </div>
+                                        <h2 className="text-3xl font-black">Digital Strategy & Marketing Plan</h2>
+                                        <p className="text-green-50 max-w-2xl leading-relaxed">
+                                            Strategic marketing turns your expertise into a thriving business. This activity focuses on building your niche-specific digital strategy and launch sequence with clear SMART goals and actionable timelines.
+                                        </p>
+                                        <div className="pt-2 flex items-center gap-2">
+                                            <div className="bg-white/10 p-2 rounded-full">
+                                                <Icon name="music" size={16} className="text-green-200" />
+                                            </div>
+                                            <p className="text-sm font-medium">
+                                                If you're looking for a little bit of motivational spirit to make you feel good and get you through this activity, then please{' '}
+                                                <a href="https://www.youtube.com/watch?v=OPf0YbXqDm0" target="_blank" className="underline decoration-green-300 underline-offset-4 hover:text-green-100 transition-colors font-bold" >click on the link to listen</a>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-green-50 border border-green-200 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-4 shadow-sm">
+                                    <div className="bg-green-100 p-3 rounded-xl text-green-600">
+                                        <Icon name="youtube" size={32} />
+                                    </div>
+                                    <div className="flex-grow text-center sm:text-left space-y-1">
+                                        <h4 className="font-bold text-green-900">Marketing Strategy Tutorial</h4>
+                                        <p className="text-sm text-green-700">Watch this expert guide to gain an understanding of the importance of a professional marketing strategy.</p>
+                                    </div>
+                                    <a href="https://youtu.be/ou9FZ_Txf3M?si=dNj3N9fYK8rLRNzp" target="_blank" className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition-all shadow-md active:scale-95 whitespace-nowrap">
+                                        <Icon name="external-link" size={18} /> Watch Tutorial
+                                    </a>
+                                </div>
+
+                                <section className="space-y-4">
+                                    <div className="flex items-center gap-2 px-2">
+                                        <div className="bg-green-100 p-1.5 rounded-lg">
+                                            <Icon name="info" size={20} className="text-green-600" />
+                                        </div>
+                                        <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Step-by-Step Guidance</h3>
+                                    </div>
+                                    <div className="grid gap-4">
+                                        <GuideCard step="1" title="Watch & Learn">
+                                            Click on the <strong>Marketing Strategy Tutorial</strong> link above and watch the video. Once finished, write up <strong>three key takeaways</strong> and type them into your <strong>personal Padlet</strong>.
+                                        </GuideCard>
+                                        <GuideCard step="2" title="Set SMART Goals">
+                                            Define exactly how many clients you want and by what date using <strong>Prompt 01</strong>. Use the format: "I want X clients by DATE using CHANNEL".
+                                        </GuideCard>
+                                        <GuideCard step="3" title="Develop Marketing Strategy">
+                                            Build a comprehensive marketing plan tailored to your niche using <strong>Prompt 02</strong>. This identifies the "why" and "how" behind your outreach.
+                                        </GuideCard>
+                                        <GuideCard step="4" title="Select Your Channels">
+                                            Choose 2 platforms to focus on (e.g., Instagram, TikTok, Facebook) based on where your niche demographic spends their time.
+                                        </GuideCard>
+                                        <GuideCard step="5" title="30-Day Content Calendar">
+                                            Create a structured 30-day posting schedule using <strong>Prompt 03</strong> that builds authority, empathy, and social proof.
+                                        </GuideCard>
+                                        <GuideCard step="6" title="Budget Allocation">
+                                            Refer to your Marketing PDF and use <strong>Prompt 04</strong> to allocate a monthly budget for essential tools and potential advertising spend.
+                                        </GuideCard>
+                                    </div>
+                                </section>
+                                <ResearchToolkit onCopy={copyToClipboard} copiedIndex={copiedIndex} colorScheme="green"
+                                    prompts={[
+                                        { label: "01. SMART Goals", text: "I am a personal trainer specialising in [YOUR NICHE]. Define 3 SMART goals for my business launch. Ensure they are Specific, Measurable, Achievable, Relevant, and Time-bound. Provide output strictly in UK English." },
+                                        { label: "02. Niche Marketing Strategy", text: "Create a detailed strategic marketing plan for my personal training business in [YOUR AREA]. My target demographic is [DESCRIBE AUDIENCE]. Outline how I can build trust and authority. Use strictly UK English spelling." },
+                                        { label: "03. 30-Day Content Calendar", text: "Generate a 30-day social media content calendar for my launch. Each day should include a post topic, suggested caption hook, and the goal of the post. Use UK English throughout." },
+                                        { label: "04. Budget & Ad Copy", text: "I have a monthly budget of [£ AMOUNT]. Recommend how to allocate this between tools and digital advertising. Also, write variations of high-converting Ad copy for my [NICHE] program using UK English spelling." }
+                                    ]}
+                                />
+                            </div>
+                        );
+
+                    case 'blog':
+                        return (
+                            <div className="animate-in space-y-8">
+                                <div className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                                    <div className="relative z-10 space-y-4">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider">
+                                            <Icon name="pen-tool" size={14} /> Authority Blogging
+                                        </div>
+                                        <h2 className="text-3xl font-black">Authority Blogging</h2>
+                                        <p className="text-pink-50 max-w-2xl leading-relaxed">
+                                            A professional blog post establishes your expertise and builds trust with future clients. By writing content that solves real-world challenges, you position yourself as a niche authority.
+                                        </p>
+                                        <div className="pt-2 flex items-center gap-2">
+                                            <div className="bg-white/10 p-2 rounded-full">
+                                                <Icon name="music" size={16} className="text-pink-200" />
+                                            </div>
+                                            <p className="text-sm font-medium">
+                                                If you're looking for a little positivity to get creative, then please{' '}
+                                                <a href="https://www.youtube.com/watch?v=HgzGwKwLmgM" target="_blank" className="underline decoration-pink-300 underline-offset-4 hover:text-pink-100 transition-colors font-bold">click on the link and listen</a>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-pink-50 border border-pink-200 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-4 shadow-sm">
+                                    <div className="bg-pink-100 p-3 rounded-xl text-pink-600">
+                                        <Icon name="youtube" size={32} />
+                                    </div>
+                                    <div className="flex-grow text-center sm:text-left space-y-1">
+                                        <h4 className="font-bold text-pink-900">High-Conversion Blogging Guide</h4>
+                                        <p className="text-sm text-pink-700">Watch this tutorial on how to write blog posts that solve real-world challenges and convert readers into clients.</p>
+                                    </div>
+                                    <a href="https://youtu.be/UptoJwlyKT4?si=Pzu75nGfgVG6R-8u" target="_blank" className="flex items-center gap-2 px-6 py-3 bg-pink-600 text-white rounded-xl font-bold hover:bg-pink-700 transition-all shadow-md active:scale-95 whitespace-nowrap">
+                                        <Icon name="external-link" size={18} /> Watch Tutorial
+                                    </a>
+                                </div>
+
+                                <section className="space-y-4">
+                                    <div className="flex items-center gap-2 px-2">
+                                        <div className="bg-pink-100 p-1.5 rounded-lg">
+                                            <Icon name="info" size={20} className="text-pink-600" />
+                                        </div>
+                                        <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Step-by-Step Guidance</h3>
+                                    </div>
+                                    <div className="grid gap-4">
+                                        <GuideCard step="1" title="Watch & Learn">
+                                            Click on the <strong>Blogging Guide</strong> link above and watch the tutorial. Once finished, write up <strong>three key takeaways</strong> and type them into your <strong>personal Padlet</strong>.
+                                        </GuideCard>
+                                        <GuideCard step="2" title="Define Topic & Audience">
+                                            Identify your niche and the specific real-world challenge you want to address. Use <strong>Prompt 01</strong> to generate titles.
+                                        </GuideCard>
+                                        <GuideCard step="3" title="AI Blog Drafting">
+                                            Copy <strong>Prompt 02</strong> into an AI tool. Ensure your post has a strong hook, actionable tips for a specific challenge, and a CTA.
+                                        </GuideCard>
+                                        <GuideCard step="4" title="Visual Representation">
+                                            Produce a visual <strong>Information Graphic</strong> that summarises the key takeaways of your blog using <strong>Prompt 03</strong>.
+                                        </GuideCard>
+                                        <GuideCard step="5" title="SEO & Conversion Check">
+                                            Optimise your post for local search and verify its conversion potential using <strong>Prompt 04</strong> before finalising.
+                                        </GuideCard>
+                                        <GuideCard step="6" title="Final Upload">
+                                            Capture your blog text and infographic, then upload them to your <strong>personal Padlet</strong> and the <strong>Group Padlet</strong> for peer feedback.
+                                        </GuideCard>
+                                    </div>
+                                </section>
+                                <ResearchToolkit onCopy={copyToClipboard} copiedIndex={copiedIndex} colorScheme="pink"
+                                    prompts={[
+                                        { label: "01. Blog Strategy", text: "I am a personal trainer specialising in [YOUR NICHE]. My target demographic is [DESCRIBE AUDIENCE]. Suggest 5 blog titles in UK English focusing on solving a specific real-world challenge (e.g., 'How to stay active with a desk job')." },
+                                        { label: "02. Content Drafting", text: "Write a high-quality blog post of [WORD COUNT] words based on the title [CHOSEN TITLE]. Include: An engaging hook, an empathetic explanation of a real-world challenge, 3 actionable tips, and a compelling CTA. Use strictly UK English spelling." },
+                                        { label: "03. Infographic Generation", text: "Based on the blog post we just wrote, provide a structured layout for an infographic. Suggest a title, 3 key icons, and a professional colour palette. Ensure text uses UK English." },
+                                        { label: "04. SEO & Conversion", text: "Provide a meta-description and 5 keywords for the blog post using UK English. Suggest one 'Social Proof' element I could add to increase trust." }
+                                    ]}
+                                />
+                            </div>
+                        );
+
+                    default:
+                        return null;
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
+                    <div className="max-w-4xl mx-auto">
+                        <header className="mb-12 text-center">
+                            <div className="flex items-center justify-center gap-3 mb-6">
+                                <div className="bg-slate-900 p-2 rounded-lg text-white">
+                                    <Icon name="book-open" size={24} />
+                                </div>
+                                <h1 className="text-3xl font-black tracking-tight uppercase">Business Unit Activities</h1>
+                            </div>
+                            <div className="inline-flex flex-wrap gap-2 p-1 bg-white border border-slate-200 rounded-2xl shadow-sm justify-center">
+                                {modules.map((m) => (
+                                    <button
+                                        key={m.id}
+                                        onClick={() => setActiveModule(m.id)}
+                                        className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all text-sm ${activeModule === m.id ? `${m.bg} ${m.color} shadow-sm ring-1 ring-inset ${m.border}` : 'text-slate-500 hover:text-slate-800'}`}
+                                    >
+                                        <Icon name={m.icon} size={16} />
+                                        {m.title}
+                                    </button>
+                                ))}
+                            </div>
+                        </header>
+                        <main className="pb-20">
+                            {renderContent()}
+                        </main>
+                        <footer className="text-center text-slate-400 font-bold text-[10px] tracking-widest uppercase">
+                            PT Certification • Business Module v2.0
+                        </footer>
+                    </div>
+                </div>
+            );
+        };
+
+        const GuideCard = ({ step, title, children }) => (
+            <div className="flex gap-4 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center font-black text-sm border border-slate-100">
+                    {step}
+                </div>
+                <div className="space-y-1">
+                    <h4 className="font-bold text-slate-800 leading-none">{title}</h4>
+                    <div className="text-sm text-slate-500 leading-relaxed">
+                        {children}
+                    </div>
+                </div>
+            </div>
+        );
+
+        const ResearchToolkit = ({ prompts, onCopy, copiedIndex, colorScheme }) => {
+            const schemes = {
+                blue: "bg-white text-blue-900 border-blue-100 shadow-blue-50",
+                indigo: "bg-white text-indigo-900 border-indigo-100 shadow-indigo-50",
+                cyan: "bg-white text-cyan-900 border-cyan-100 shadow-cyan-50",
+                orange: "bg-white text-orange-900 border-orange-100 shadow-orange-50",
+                green: "bg-white text-green-900 border-green-100 shadow-green-50",
+                pink: "bg-white text-pink-900 border-pink-100 shadow-pink-50"
+            };
+
+            const btnSchemes = {
+                blue: "bg-blue-600 hover:bg-blue-700",
+                indigo: "bg-indigo-600 hover:bg-indigo-700",
+                cyan: "bg-cyan-600 hover:bg-cyan-700",
+                orange: "bg-orange-600 hover:bg-orange-700",
+                green: "bg-green-600 hover:bg-green-700",
+                pink: "bg-pink-600 hover:bg-pink-700"
+            };
+
+            return (
+                <div className="space-y-4 pt-4">
+                    <div className="flex items-center gap-2 px-2">
+                        <Icon name="lightbulb" size={18} className="text-amber-500" />
+                        <h3 className="font-bold text-slate-800 uppercase tracking-tighter">Research Toolkit: Search Prompts</h3>
+                    </div>
+                    <div className="grid gap-3">
+                        {prompts.map((p, i) => (
+                            <div key={i} className={`flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-5 rounded-2xl border transition-all gap-4 shadow-sm ${schemes[colorScheme] || schemes.blue}`}>
+                                <div className="space-y-1">
+                                    <span className="text-[10px] font-black uppercase opacity-60 tracking-widest">{p.label}</span>
+                                    <p className="text-sm font-medium italic leading-snug">"{p.text}"</p>
+                                </div>
+                                <button 
+                                    onClick={() => onCopy(p.text, i)}
+                                    className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap text-white shadow-sm active:scale-95 ${copiedIndex === i ? 'bg-green-600' : (btnSchemes[colorScheme] || btnSchemes.blue)}`}
+                                >
+                                    {copiedIndex === i ? <Icon name="check-circle-2" size={14} /> : <Icon name="copy" size={14} />}
+                                    {copiedIndex === i ? 'Copied!' : 'Copy Prompt'}
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const SubmissionBox = ({ title = "Upload to Personal Padlet", description = "Capture your findings and notes from this activity and upload the document to your Personal Padlet to complete the unit.", colorClass = "bg-blue-600 shadow-blue-100", showButton = true }) => (
+            <div className={`mt-12 p-6 ${colorClass} rounded-3xl text-white shadow-xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden group transition-all`}>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-white/20 transition-all"></div>
+                {!showButton && (
+                    <div className="flex-shrink-0 bg-white/20 p-4 rounded-2xl">
+                        <div className="flex items-center -space-x-1">
+                           <Icon name="upload-cloud" size={24} className="text-white" />
+                           <Icon name="users" size={20} className="text-white/60" />
+                        </div>
+                    </div>
+                )}
+                <div className="relative z-10 space-y-1 flex-grow text-center md:text-left">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase tracking-wider">Final Step</div>
+                    <h3 className="text-xl font-black">{title}</h3>
+                    <p className="text-white/90 text-sm leading-relaxed max-w-2xl">{description}</p>
+                </div>
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
